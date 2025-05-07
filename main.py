@@ -22,7 +22,7 @@ TARGET_SENSOR_ID = int(os.getenv("TARGET_SENSOR_ID"))
 
 # Build the PostgreSQL connection string
 POSTGRES_CONN_STRING = (
-    f"dbname={DB_NAME} user={DB_USER} password={DB_PASSWORD} host={DB_HOST}"
+    f"dbname={DB_NAME} user={DB_USER} password={DB_PASS} host={DB_HOST}"
 )
 
 # --------------------------
