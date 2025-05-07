@@ -75,7 +75,7 @@ def insert_into_database(timestamp, pool_temp_celsius):
                     weather_main, weather_description,
                     humidity, cloudiness_pct, wind_speed_mps,
                     wind_direction_deg, pressure_hpa
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 timestamp, pool_temp_celsius, pool_temp_fahrenheit,
                 weather["weather_temp_c"], weather["weather_temp_f"],
