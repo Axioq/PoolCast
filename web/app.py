@@ -2,9 +2,10 @@ from flask import Flask, render_template
 import psycopg2
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Load environment variables from .env file
-load_dotenv("config/secrets.env")  # Load environment
+load_dotenv(Path(__file__).resolve().parent.parent / "config" / "secrets.env")
 
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
@@ -21,8 +22,8 @@ POSTGRES_CONN_STRING = (
 sql = f"""
     Select 
         recorded_at
-        , temperature_c
-        , weather_temp_c
+        , temperature_f
+        , weather_temp_f
     From 
         logs
     Order By 
@@ -53,4 +54,4 @@ def dashboard():
 
 if __name__ == "__main__":
     # Run the Flask app
-    app.run(debug=True, host=5001)
+    app.run(host='0.0.0.0', port=5001, debug=True)
