@@ -1,8 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import psycopg2
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from datetime import datetime, timedelta, timezone
 
 # Load environment variables from .env file
 load_dotenv(Path(__file__).resolve().parent.parent / "config" / "secrets.env")
@@ -24,15 +25,30 @@ sql = f"""
         recorded_at
         , temperature_f
         , weather_temp_f
+        , temperature_c
+        , weather_temp_c
     From 
         logs
-    Order By 
-        Recorded_at desc
-    Limit 100
+    Where 
+        recorded_at >= %s
+    Order By
+        recorded_at asc
     """
 @app.route("/")
 def dashboard():
-    readings = []
+    time_range = request.args.get("range", "24h")
+
+    now = datetime.now(tz=timezone.utc)
+    if time_range == "7d":
+        start_time = now - timedelta(days=7)
+    elif time_range == "30d":
+        start_time = now - timedelta(days=30)
+    elif time_range == "1y":
+        start_time = now - timedelta(days=365)
+    else:
+        start_time = now - timedelta(hours=24)
+
+    readings= []
     error = None
     # Connect to the PostgreSQL database
     
@@ -40,7 +56,7 @@ def dashboard():
         with psycopg2.connect(POSTGRES_CONN_STRING) as conn:
             with conn.cursor() as cur:
                 # Execute a query to fetch the latest 100 readings
-                cur.execute(sql)
+                cur.execute(sql, (start_time,))
                 readings = cur.fetchall()
     
     except psycopg2.Error as db_error:
