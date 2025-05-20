@@ -20,20 +20,28 @@ POSTGRES_CONN_STRING = (
     f"dbname={DB_NAME} user={DB_USER} password={DB_PASS} host={DB_HOST}"
 )
 
-sql = f"""
-    Select 
-        recorded_at
-        , temperature_f
-        , weather_temp_f
-        , temperature_c
-        , weather_temp_c
-    From 
+sql = """
+    SELECT 
+        recorded_at,
+        temperature_f,
+        weather_temp_f,
+        temperature_c,
+        weather_temp_c,
+        feels_like_f,
+        feels_like_c,
+        weather_main,
+        weather_description,
+        humidity,
+        cloudiness_pct,
+        wind_speed_mps 
+    FROM 
         logs
-    Where 
+    WHERE 
         recorded_at >= %s
-    Order By
-        recorded_at asc
-    """
+    ORDER BY 
+        recorded_at ASC
+"""
+
 @app.route("/")
 def dashboard():
     time_range = request.args.get("range", "24h")
